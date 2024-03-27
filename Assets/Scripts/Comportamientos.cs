@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Comportamientos : MonoBehaviour
 {
+
+
     public float radio;
-    public float maxSpeed;
+    public float maxSpeed = 100f;
+    public float maxSpeedRotation = 5.0f;
+    public float stopdistance = 150f;
     public float Speed;
     public Transform Target;
     public float radioWander;
@@ -17,13 +21,15 @@ public class Comportamientos : MonoBehaviour
     public void Seek(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        transform.position += direction * Time.deltaTime * maxSpeed;
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * maxSpeedRotation);
+        transform.position += transform.forward * Time.deltaTime * maxSpeed;
     }
 
     public void Flee(Vector3 target)
     {
         Vector3 direction = (transform.position - target).normalized;
-        transform.position += direction * Time.deltaTime * maxSpeed;
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * maxSpeedRotation);
+        transform.position += transform.forward * Time.deltaTime * maxSpeed;
     }
 
     public void Evade(Transform targetTransform, float predictionTime)
@@ -79,15 +85,11 @@ public class Comportamientos : MonoBehaviour
         if(Physics.Raycast(transform.position, transform.forward,out hit, obstacleDetectionDistance))
         {
             Vector3 avoidanceDirection = Vector3.Cross(hit.normal, Vector3.up);
-            Debug.Log(avoidanceDirection);
             transform.Rotate(avoidanceDirection * avoidanceRotationSpeed * Time.deltaTime);
-            Debug.DrawRay(transform.position, transform.forward * obstacleDetectionDistance, Color.red);
 
         }
         else
         {
-            Debug.DrawRay(transform.position, transform.forward * obstacleDetectionDistance, Color.green);
-
             transform.position += transform.forward * Time.deltaTime * maxSpeed;
         }
 
@@ -166,7 +168,7 @@ public class Comportamientos : MonoBehaviour
 
     private void Update()
     {
-                
+        Flee(Target.transform.position);
     }
 
 

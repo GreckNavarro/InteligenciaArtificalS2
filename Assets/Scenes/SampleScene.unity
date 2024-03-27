@@ -610,7 +610,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radio: 5
-  maxSpeed: 150
+  maxSpeed: 100
+  maxSpeedRotation: 5
+  stopdistance: 150
   Speed: 3
   Target: {fileID: 957780606}
   radioWander: 10
